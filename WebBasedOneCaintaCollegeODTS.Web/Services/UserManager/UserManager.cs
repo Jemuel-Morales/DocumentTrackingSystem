@@ -33,7 +33,7 @@ namespace DocumentTrackingSystem.Web.Services.UserManager
                 Username = user.Username,
                 People = new ReadPeopleVM()
                 {
-                    FullName = user.LastName + user.FirstName + user.MiddleName
+                    FullName = user.LastName + ", " + user.FirstName + " " + user.MiddleName.Substring(0, 1)
                 },
                 Role = new ReadRoleVM()
                 {
@@ -56,6 +56,23 @@ namespace DocumentTrackingSystem.Web.Services.UserManager
         public string GetUserRole(HttpContext httpContext)
         {
             return _jwtService.GetUserClaims(httpContext.Request.Cookies["token"]).First(c => c.Type == "Role").Value;
+        }
+
+        public async Task<string> GetUserFullName(HttpContext httpContext)
+        {
+            var id = _jwtService.GetUserClaims(httpContext.Request.Cookies["token"]).First(c => c.Type == "ID").Value;
+            if(id != null)
+            {
+                var name = await _context.Users.Include(e => e.People).FirstOrDefaultAsync(e => e.Id == _routeProtector.Decode(id));
+
+                string lastN = name.People.LastName.ToUpper();
+                string FirstN = name.People.FirstName.ToUpper();
+                string MiddleI = name.People.MiddleName.Substring(0, 1).ToUpper() + "." ?? null;
+
+                return $"{lastN}, {FirstN} {MiddleI}";
+            }
+
+            return null;
         }
     }
 }

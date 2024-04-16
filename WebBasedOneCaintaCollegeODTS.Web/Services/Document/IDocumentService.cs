@@ -8,7 +8,7 @@ namespace DocumentTrackingSystem.Web.Services.Document
         Task<IEnumerable<ReadDocumentVM>> GetAllDocuments();
         Task<ReadDocumentVM> GetByQRCode(string trackingNumber);
         Task<bool> IsTrackingNumberExist(string trackingNumber);
-        string GetDocumentTrackingNumberById(string encryptedId);
+        Task<string> GetDocumentTrackingNumberById(string encryptedId);
         Task<IEnumerable<ReadStatusVM>> GetAllStatus();
         Task<IEnumerable<ReadTypeVM>> GetAllTypes();
 

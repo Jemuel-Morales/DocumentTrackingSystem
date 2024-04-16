@@ -6,7 +6,9 @@ using DocumentTrackingSystem.Web.Models.Document;
 using DocumentTrackingSystem.Web.Models.TrackingStatus;
 using DocumentTrackingSystem.Web.Services.Config;
 using DocumentTrackingSystem.Web.Services.Student;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DocumentTrackingSystem.Web.Services.Document
 {
@@ -170,15 +172,16 @@ namespace DocumentTrackingSystem.Web.Services.Document
 
         
 
-        public string GetDocumentTrackingNumberById(string encryptedId)
+        public async Task<string> GetDocumentTrackingNumberById(string encryptedId)
         {
+
             try
             {
-                var result = _context.Documents.Where(e => e.Id == _routeProtector.Decode(encryptedId)).First().TrackingNumber;
+                var result = await _context.Documents.Where(e => e.Id == _routeProtector.Decode(encryptedId)).FirstAsync();
 
                 if (result != null)
                 {
-                    return result;
+                    return result.TrackingNumber;
                 }
             }
             catch (Exception)

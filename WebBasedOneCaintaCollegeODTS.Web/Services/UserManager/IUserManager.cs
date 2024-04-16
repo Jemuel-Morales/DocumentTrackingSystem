@@ -5,6 +5,7 @@
         bool IsUsernameOrEmailExist(string usernameOrEmail);
         Task<bool> SignInAsync(HttpContext httpcontext, string usernameOrEmail, string password);
         string GetUserRole(HttpContext httpContext);
+        Task<string> GetUserFullName(HttpContext httpContext);
 
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace DocumentTrackingSystem.Web.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace DocumentTrackingSystem.Web.Models
 {
     public class SignInVM
     {
-        public string UsernameOrEmail { get; set; }
-        public string Password { get; set; }
+        [Required(ErrorMessage = "Username or Email is required")]
+        public required string  UsernameOrEmail { get; set; }
+        [Required(ErrorMessage = "Password is required")]
+        public required string Password { get; set; }
     }
 }

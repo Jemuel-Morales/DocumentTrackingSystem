@@ -4,18 +4,21 @@ using DocumentTrackingSystem.Web.Models.TrackingStatus;
 using DocumentTrackingSystem.Web.Services.Document;
 using DocumentTrackingSystem.Web.Services.Student;
 using DocumentTrackingSystem.Web.Services.TrackingStatus;
+using DocumentTrackingSystem.Web.Services.UserManager;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace DocumentTrackingSystem.Web.Controllers
 {
     [Authorize]
-    public class DocumentController(IDocumentService _documentService, IStudentService studentService, ITrackingStatus trackingStatus) : Controller
+    public class DocumentController(IDocumentService _documentService, IStudentService studentService, ITrackingStatus trackingStatus, IUserManager userManager) : Controller
     {
         private readonly IDocumentService _documentService = _documentService;
         private readonly IStudentService _studentService = studentService;
         private readonly ITrackingStatus _trackingStatus = trackingStatus;
+        private readonly IUserManager _userManager = userManager;
 
         [AllowAnonymous]
         public async Task<IActionResult> Index(string trckNum)
@@ -43,6 +46,7 @@ namespace DocumentTrackingSystem.Web.Controllers
                 Text = e.TypeName,
                 Value = e.Id.ToString()
             }).ToList();
+
             return View();
         }
 
@@ -77,6 +81,7 @@ namespace DocumentTrackingSystem.Web.Controllers
                 Text = e.StatusName,
                 Value = e.Id.ToString()
             }).ToList();
+            ViewBag.NameOfModifier = _userManager.GetUserFullName(HttpContext);
 
             if (!string.IsNullOrEmpty(trckNum))
             {
@@ -93,6 +98,7 @@ namespace DocumentTrackingSystem.Web.Controllers
                     {
                         ReadDocument = result
                     };
+                    
                     return View(map);
                 }
             }
@@ -107,15 +113,15 @@ namespace DocumentTrackingSystem.Web.Controllers
             try
             {
 
-                var trckNum = _documentService.GetDocumentTrackingNumberById(model.WriteTrackingStatus.DocumentEncryptId);
-
+                var trckNum = await _documentService.GetDocumentTrackingNumberById(model.WriteTrackingStatus.DocumentEncryptId);
+                var name = await _userManager.GetUserFullName(HttpContext);
                 if (trckNum != null)
                 {
                     await _trackingStatus.CreateAsync(new WriteTrackingStatusVM
                     {
                         DocumentEncryptId = model.WriteTrackingStatus.DocumentEncryptId,
                         StatusId = model.WriteTrackingStatus.StatusId,
-                        ModifiedBy = model.WriteTrackingStatus.ModifiedBy,
+                        ModifiedBy = name,
                         Comments = model.WriteTrackingStatus.Comments
                     });
                     return Redirect($"/Document/NewTrail?trckNum={trckNum}");
