@@ -1,0 +1,26 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@using (Html.BeginForm("Index", "Document", FormMethod.Get))
+{
+    @Html.TextBox("trckNum")
+    <input type="submit" value="Search" class="btn btn-success" />
+}
+
+<div class="container d-flex  justify-content-center align-items-center">
+    <div class="row mt-5 card w-75">
+
+        <div class="mb-3">
+            <h1>Scan Document Via QR</h1>
+        </div>
+        <div class="mb-3 d-flex align-items-center justify-content-center flex-column">
+            <div id="reader" class="d-block w-50"></div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/qrcode.js"></script>
+}

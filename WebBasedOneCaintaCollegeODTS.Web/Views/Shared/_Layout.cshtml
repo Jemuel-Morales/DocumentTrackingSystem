@@ -1,0 +1,72 @@
+﻿@using System.IdentityModel.Tokens.Jwt;
+@{
+    var token = "";
+    string FullName = "";
+    string Role = "";
+    if (ViewContext.HttpContext.Request.Cookies.TryGetValue("token", out token))
+    {
+        JwtSecurityToken jwtSecurityToken = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        FullName = jwtSecurityToken.Claims.First(c => c.Type == "Name").Value;
+        Role = jwtSecurityToken.Claims.First(c => c.Type == "Role").Value;
+    }
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebBasedDocumentTrackingSystem.Web</title>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+    <link href="~/lib/fastbootstrap/dist/css/fastbootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/css/timeline.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/WebBasedDocumentTrackingSystem.Web.styles.css" asp-append-version="true" /> *@
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/">
+                    @* <img src="/images/bootstrap-logo.svg" width="36" alt="Logo" /> *@
+                    Online Document Tracking System
+                    <span class="text-discovery fs-xs">@Role</span>
+                </a>
+                <ul class="navbar-nav">
+                    @if(!(String.IsNullOrEmpty(FullName) && String.IsNullOrEmpty(Role)))
+                    {
+                        <li class="nav-item dropdown">
+                            <span class="text-black me-3">@FullName.ToUpper()</span>
+                            <a class="avatar" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="/images/avatar/user.png" class="avatar-badge border" />
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end position-absolute">
+                                <li><a class="dropdown-item" href="/Account/Profile">Profile</a></li>
+                                <li><a class="dropdown-item" href="/Account/Logout">Logout</a></li>
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a href="/Account/Login" class="btn btn-outline-success">Login</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid bg-dark">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    @* <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script> *@
+    <script src="~/lib/fastbootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="~/lib/font-awesome/js/all.min.js"></script>
+    <script src="~/lib/html5-qrcode/html5-qrcode.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

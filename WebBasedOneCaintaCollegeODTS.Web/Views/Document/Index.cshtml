@@ -1,0 +1,140 @@
+﻿@model ReadDocumentVM
+@using QRCoder
+@{
+    ViewData["Title"] = "View";
+    bool FirstIteration = true;
+}
+
+<section class="container-lg">
+    <div class="my-5 bg-white p-5 card">
+        <div class="mb-3 d-flex justify-content-between">
+            <span class="badge text-bg-success p-3 fw-bold">@Model.TrackingNumber</span>
+            <a class="badge text-bg-success p-3 fw-bold" href="#"><i class="fa-solid fa-print"></i></a>
+        </div>
+        <section class="p-4">
+            <div class="mb-4">
+                <div class="row row-cols-1 row-cols-md-2">
+                    <div class="col d-flex flex-column flex-md-row">
+                        <img src=@("data:image/png;base64," + System.Convert.ToBase64String(
+                             PngByteQRCodeHelper.GetQRCode(Model.TrackingNumber, QRCodeGenerator.ECCLevel.Q, 10))) class="img-thumbnail border border-solid border-2 border-dark w-25 h-100 me-3" />
+                        <div class="d-flex flex-column justify-content-between ">
+                            <div class="d-flex flex-column">
+                                <span>Tracking Number</span>
+                                <strong>@Model.TrackingNumber</strong>
+                            </div>
+                            <div class="d-flex flex-column">
+                                <span>Document ID</span>
+                                <strong>@Model.DocumentNumber</strong>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col mt-sm-4 mt-md-0">
+                        <span class="mt-sm-5">Remark</span>
+                        <h3>@Model.TrackingStatus.FirstOrDefault()?.StatusName</h3>
+                        <span>Updated: @Model.TrackingStatus.FirstOrDefault()?.DateCreated.ToString("dd MMMM, yyyy | hh:mm:ss tt")</span>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-12">
+                <p>Description</p>
+                <strong>@Model.Description</strong>
+            </div>
+        </section>
+        <section>
+            <div class="mb-3">
+                <h4>Tracking Status</h4>
+            </div>
+            <div class="row">
+                <div class="timeline p-4 block">
+                    
+                    @foreach(var status in Model.TrackingStatus)
+                    {
+                        if (FirstIteration)
+                        {
+                            <div class="tl-item active">
+                                <div class="tl-dot"></div>
+                                <div class="tl-content">
+                                    <div class="row mb-3">
+                                        <strong>@status.DateCreated</strong>
+                                        <div class="d-flex flex-column">
+                                            <small class="mb-3">@Model.FormatTimeInterval(status.DateCreated)</small>
+                                            <span class="align-self-start badge text-bg-success py-1">@status.StatusName</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p>Modified by: <strong>@status.ModifiedBy</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <small>Comments/Remarks</small>
+                                        <small class="text-danger fw-bold">@status.Comments</small>
+                                    </div>
+                                </div>
+                            </div>
+                            FirstIteration = false;
+                        } else
+                        {
+                            <div class="tl-item">
+                                <div class="tl-dot"></div>
+                                <div class="tl-content">
+                                    <div class="row mb-3">
+                                        <strong>@status.DateCreated</strong>
+                                        <div class="d-flex flex-column">
+                                            <small class="mb-3">@Model.FormatTimeInterval(status.DateCreated)</small>
+                                            <span class="align-self-start badge text-bg-success py-1">@status.StatusName</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-4">
+                                        <p>Modified by: <strong>@status.ModifiedBy</strong></p>
+                                    </div>
+                                    <div class="row">
+                                        <small>Comments/Remarks</small>
+                                        <small class="text-danger fw-bold">@status.Comments</small>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                    }
+                    @* <div class="tl-item active">
+                        <div class="tl-dot"></div>
+                        <div class="tl-content">
+                            <div class="row mb-3">
+                                <strong>June 23, 2024 | 1:00 PM</strong>
+                                <div class="d-flex flex-column">
+                                    <small class="mb-3">1 hour ago</small>
+                                    <span class="align-self-start badge text-bg-success py-1">Pending</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <p>Modified by: <strong>Name of Modifier</strong></p>
+                            </div>
+                            <div class="row">
+                                <small>Comments/Remarks</small>
+                                <small class="text-danger fw-bold">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto adipisci omnis vero necessitatibus at ab deserunt dicta illum voluptate nostrum. Rerum non perferendis recusandae excepturi quo delectus, exercitationem blanditiis iusto</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tl-item">
+                        <div class="tl-dot"></div>
+                        <div class="tl-content">
+                            <div class="row mb-3">
+                                <strong>June 23, 2024 | 1:00 PM</strong>
+                                <div class="d-flex flex-column">
+                                    <small class="mb-3">1 hour ago</small>
+                                    <span class="align-self-start badge text-bg-success py-1">Pending</span>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <p>Modified by: <strong>Name of Modifier</strong></p>
+                            </div>
+                            <div class="row">
+                                <small>Comments/Remarks</small>
+                                <small class="text-danger fw-bold">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Architecto adipisci omnis vero necessitatibus at ab deserunt dicta illum voluptate nostrum. Rerum non perferendis recusandae excepturi quo delectus, exercitationem blanditiis iusto</small>
+                            </div>
+                        </div>
+                    </div> *@
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
