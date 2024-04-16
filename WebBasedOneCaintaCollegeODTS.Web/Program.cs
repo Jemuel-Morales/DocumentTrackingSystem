@@ -96,7 +96,7 @@ app.UseStatusCodePages(async context =>
     if (response.StatusCode == 401)
     {
         response.Cookies.Delete("token");
-        response.Redirect("/Account/Login");
+        response.Redirect("/");
     }
     if (response.StatusCode == 403)
     {

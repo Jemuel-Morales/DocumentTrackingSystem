@@ -4,17 +4,20 @@ using DocumentTrackingSystem.Web.Models.TrackingStatus;
 using DocumentTrackingSystem.Web.Services.Document;
 using DocumentTrackingSystem.Web.Services.Student;
 using DocumentTrackingSystem.Web.Services.TrackingStatus;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace DocumentTrackingSystem.Web.Controllers
 {
+    [Authorize]
     public class DocumentController(IDocumentService _documentService, IStudentService studentService, ITrackingStatus trackingStatus) : Controller
     {
         private readonly IDocumentService _documentService = _documentService;
         private readonly IStudentService _studentService = studentService;
         private readonly ITrackingStatus _trackingStatus = trackingStatus;
 
+        [AllowAnonymous]
         public async Task<IActionResult> Index(string trckNum)
         {
             if (!string.IsNullOrEmpty(trckNum))
@@ -77,8 +80,11 @@ namespace DocumentTrackingSystem.Web.Controllers
 
             if (!string.IsNullOrEmpty(trckNum))
             {
-                var result = await _documentService.GetByQRCode(trckNum);
+                var exist = await _documentService.IsTrackingNumberExist(trckNum);
 
+                if (!exist) return Redirect("/Dashboard");
+
+                var result = await _documentService.GetByQRCode(trckNum);
 
 
                 if (result != null)
@@ -100,6 +106,7 @@ namespace DocumentTrackingSystem.Web.Controllers
         {
             try
             {
+
                 var trckNum = _documentService.GetDocumentTrackingNumberById(model.WriteTrackingStatus.DocumentEncryptId);
 
                 if (trckNum != null)

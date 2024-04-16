@@ -168,6 +168,8 @@ namespace DocumentTrackingSystem.Web.Services.Document
             return true;
         }
 
+        
+
         public string GetDocumentTrackingNumberById(string encryptedId)
         {
             try
@@ -186,6 +188,25 @@ namespace DocumentTrackingSystem.Web.Services.Document
             }
 
             return null;
+        }
+
+        public async Task<bool> IsTrackingNumberExist(string trackingNumber)
+        {
+            try
+            {
+                var result = await _context.Documents.FirstOrDefaultAsync(e => e.TrackingNumber == trackingNumber.Trim());
+
+                if(result == null)
+                {
+                    return false;
+                }
+
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
