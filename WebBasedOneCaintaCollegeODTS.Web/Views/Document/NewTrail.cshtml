@@ -20,8 +20,8 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="WriteTrackingStatus.ModifiedBy" class="form-label">Modified By <span class="text-danger">*</span></label>
-                    <input asp-for="WriteTrackingStatus.ModifiedBy" class="form-control" placeholder="Enter Name" value="@ViewBag.NameOfModifier">
+                    <label asp-for="WriteTrackingStatus.CreatedBy" class="form-label">Created By <span class="text-danger">*</span></label>
+                    <input asp-for="WriteTrackingStatus.CreatedBy" class="form-control" placeholder="Enter Name" value="@ViewBag.NameOfModifier" aria-label="disabled input example" disabled>
                 </div>
 
                 <div class="mb-3">
@@ -92,7 +92,7 @@
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <p>Modified by: <strong>@status.ModifiedBy</strong></p>
+                                            <p>Created by: <strong>@status.CreatedBy</strong></p>
                                         </div>
                                         <div class="row">
                                             <small>Comments/Remarks</small>
@@ -115,7 +115,7 @@
                                             </div>
                                         </div>
                                         <div class="mb-4">
-                                            <p>Modified by: <strong>@status.ModifiedBy</strong></p>
+                                            <p>Created by: <strong>@status.CreatedBy</strong></p>
                                         </div>
                                         <div class="row">
                                             <small>Comments/Remarks</small>

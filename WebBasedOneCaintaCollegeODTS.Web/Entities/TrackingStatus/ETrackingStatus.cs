@@ -9,9 +9,8 @@ namespace DocumentTrackingSystem.Web.Entities.TrackingStatus
         public string Comments { get; set; }
         public int StatusId { get; set; } = 0;
         public EStatus Status { get; set; }
-        public string? ModifiedBy { get; set; }
+        public string? CreatedBy { get; set; }
         public DateTime DateCreated { get; private set; } = DateTime.Now;
-        public DateTime DateModified { get; private set; } = DateTime.Now;
 
     }
 }

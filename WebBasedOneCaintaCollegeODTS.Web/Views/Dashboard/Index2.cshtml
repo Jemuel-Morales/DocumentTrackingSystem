@@ -1,0 +1,107 @@
+﻿@model IEnumerable<ReadDocumentVM>
+@{
+
+}
+<div class="container pt-5 ">
+    <div class="d-block mb-5 d-flex align-items-center  justify-content-between ">
+        <div class="d-block">
+            <a class="btn btn-success" href="/Document/Create">New Entry Document</a>
+        </div>
+        <div class="d-flex gap-2 ">
+            @* <form class="d-flex" asp-action="/Document/Index" method="get">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit">Search</button>
+            </form> *@
+            @using (Html.BeginForm("NewTrail", "Document", FormMethod.Get))
+            {
+                @Html.TextBox("trckNum")
+                <input type="submit" value="Search" class="btn btn-outline-success" />
+            }
+            <!-- Button trigger modal -->
+            <button type="button" class="btn border bg-success-subtle " data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <i class="fa-solid fa-qrcode fa-lg"></i>
+            </button>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Scan QR Code</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container d-flex justify-content-center align-items-center">
+                            <div class="row mt-5 card w-75">
+                                <div class="mb-3 d-flex align-items-center justify-content-center flex-column">
+                                    <div id="reader" class="d-block w-50"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ul class="nav nav-pills" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pill-tab-0" data-bs-toggle="pill" href="#pill-tabpanel-0" role="tab" aria-controls="pill-tabpanel-0" aria-selected="true">Submitted</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pill-tab-1" data-bs-toggle="pill" href="#pill-tabpanel-1" role="tab" aria-controls="pill-tabpanel-1" aria-selected="false">Pending</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pill-tab-2" data-bs-toggle="pill" href="#pill-tabpanel-2" role="tab" aria-controls="pill-tabpanel-2" aria-selected="false">Done</a>
+        </li>
+    </ul>
+    <div class="tab-content py-3 mt-2">
+        <div class="tab-pane active" id="pill-tabpanel-0" role="tabpanel" aria-labelledby="pill-tab-0">
+            <div class="accordion" id="accordionExample">
+                @foreach(var document in Model)
+                {
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="@document.TrackingNumber">
+                            <button class="accordion-button pe-3" type="button" data-bs-toggle="collapse" data-bs-target="#@document.EncryptedId" aria-expanded="true" aria-controls="@document.EncryptedId">
+                                <div class="d-flex justify-content-between align-items-center w-100 me-3">
+                                    <div>
+                                        <h5>@document.Subject</h5>
+                                        <span class="fw-light">@document.TypeName</span>
+                                        <p class="mb-0 fs-sm text-muted">Date Updated: @document.DateUpdated</p>
+                                    </div>
+                                    <div>
+                                        <div>
+                                            <a asp-controller="Document" asp-action="NewTrail" asp-route-trckNum="@document.TrackingNumber" class="btn btn-success me-3 d-block">New Trail</a>
+
+                                            <a asp-controller="Document" asp-action="Index" asp-route-trckNum="@document.TrackingNumber"><i class="fa-regular fa-eye"></i></a>
+                                            @* <a class="btn btn-primary btn-sm" href="#">Add Track</a> *@
+                                            @* <a class="btn btn-dark btn-sm" href="#"><i class="fa-regular fa-eye"></i></a> *@
+                                        </div>
+                                        <div class="float-end">
+                                            <span class="badge text-bg-warning">@document.TrackingStatus.OrderBy(e => e.DateCreated).Select(e => e.StatusName).First()</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </button>
+                        </h2>
+
+                        <div id="@document.EncryptedId" class="accordion-collapse collapse" aria-labelledby="@document.TrackingNumber" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                @foreach (var status in document.TrackingStatus)
+                                {
+                                    <div class="d-flex justify-content-between align-items-center w-100">
+                                        <p>@status.StatusName</p>
+                                        <p class="mb-0 fs-sm text-muted">@status.DateCreated</p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/qrcode.js"></script>
+}

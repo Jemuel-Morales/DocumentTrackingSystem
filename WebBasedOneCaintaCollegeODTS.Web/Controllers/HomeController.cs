@@ -15,6 +15,7 @@ namespace DocumentTrackingSystem.Web.Controllers
 
         public IActionResult Index()
         {
+            if (HttpContext.Request.Cookies.Keys.Contains("token")) return Redirect("/Dashboard");
             return View();
         }
 

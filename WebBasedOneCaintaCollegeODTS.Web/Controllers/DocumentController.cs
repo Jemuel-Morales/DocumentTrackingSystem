@@ -58,10 +58,19 @@ namespace DocumentTrackingSystem.Web.Controllers
             try
             {
                 bool result = await _studentService.IsValidStudentNumber(model.StudentNumber);
-
+                var name = await _userManager.GetUserFullName(HttpContext);
                 if (result)
                 {
-                    await _documentService.CreateAsync(model);
+                    await _documentService.CreateAsync(new WriteDocumentVM
+                    {
+                        StudentNumber = model.StudentNumber,
+                        Subject = model.Subject,
+                        Description = model.Description,
+                        TypeId = model.TypeId,
+                        TrackingStatus = [new WriteTrackingStatusVM {
+                            CreatedBy = name
+                        }]
+                    });
                 }
 
                 return Redirect("/Document");
@@ -81,7 +90,7 @@ namespace DocumentTrackingSystem.Web.Controllers
                 Text = e.StatusName,
                 Value = e.Id.ToString()
             }).ToList();
-            ViewBag.NameOfModifier = _userManager.GetUserFullName(HttpContext);
+            ViewBag.NameOfModifier = await _userManager.GetUserFullName(HttpContext);
 
             if (!string.IsNullOrEmpty(trckNum))
             {
@@ -121,7 +130,7 @@ namespace DocumentTrackingSystem.Web.Controllers
                     {
                         DocumentEncryptId = model.WriteTrackingStatus.DocumentEncryptId,
                         StatusId = model.WriteTrackingStatus.StatusId,
-                        ModifiedBy = name,
+                        CreatedBy = name,
                         Comments = model.WriteTrackingStatus.Comments
                     });
                     return Redirect($"/Document/NewTrail?trckNum={trckNum}");

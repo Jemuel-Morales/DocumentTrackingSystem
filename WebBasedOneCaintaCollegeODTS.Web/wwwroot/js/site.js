@@ -3,3 +3,10 @@
 
 // Write your JavaScript code.
 
+const img = document.querySelectorAll('img')
+
+img.forEach(e => {
+    e.setAttribute("draggable", false);
+    e.addEventListener('contextmenu', event => event.preventDefault());
+
+});

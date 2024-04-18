@@ -10,32 +10,58 @@
 <head>
     <title>@ViewData["Title"] - Login</title>
     <link href="~/lib/fastbootstrap/dist/css/fastbootstrap.min.css" rel="stylesheet" />
-    <link rel="stylesheet" href="~/css/timeline.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
-    <h4>SignInVM</h4>
-    <hr />
-    <div class="row">
-        <div class="col-md-4">
-            <form asp-action="Login">
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="UsernameOrEmail" class="control-label"></label>
-                    <input asp-for="UsernameOrEmail" class="form-control" />
-                    <span asp-validation-for="UsernameOrEmail" class="text-danger"></span>
+    @* <div class="wrapper vh-100">
+        <div class="card">
+            <h4>Login</h4>
+            <hr />
+            <div class="row">
+                <div class="col-md-4">
+                    <form asp-action="Login">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="form-group">
+                            <label asp-for="UsernameOrEmail" class="control-label"></label>
+                            <input asp-for="UsernameOrEmail" class="form-control" />
+                            <span asp-validation-for="UsernameOrEmail" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password" class="control-label"></label>
+                            <input asp-for="Password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" value="Login" class="btn btn-primary" />
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="control-label"></label>
-                    <input asp-for="Password" class="form-control" />
-                    <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+        </div>
+    </div> *@
+    <div class="vh-100 d-flex justify-content-center align-items-center bg-dark-subtle">
+        <div class="card w-25 p-5 pb-10">
+            <div class="mb-3 py-2">
+                <h1>Login</h1>
+            </div>
+            <form novalidate asp-action="Login">
+                <div class="mb-2">
+                    <label asp-for="UsernameOrEmail" class="form-label">Username</label>
+                    <input type="text" class="form-control is-invalid" asp-for="UsernameOrEmail" placeholder="Enter valid username" />
+                    <span asp-validation-for="UsernameOrEmail" class="invalid-feedback"></span>
                 </div>
-                <div class="form-group">
-                    <input type="submit" value="Create" class="btn btn-primary" />
+                <div class="mb-4">
+                    <label asp-for="Password" class="form-label">Password</label>
+                    <input type="password" class="form-control is-invalid" asp-for="Password" />
+                    <span asp-validation-for="Password" class="invalid-feedback"></span>
+                </div>
+                <div>
+                    <button class="btn btn-lg btn-primary w-100" type="submit">Login</button>
                 </div>
             </form>
         </div>
     </div>
+
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/fastbootstrap/dist/js/bootstrap.bundle.min.js"></script>

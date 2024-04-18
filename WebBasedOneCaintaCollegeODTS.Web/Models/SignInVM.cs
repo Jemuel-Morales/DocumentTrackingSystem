@@ -6,6 +6,7 @@ namespace DocumentTrackingSystem.Web.Models
     {
         [Required(ErrorMessage = "Username or Email is required")]
         public required string  UsernameOrEmail { get; set; }
+        [DataType(DataType.Password)]
         [Required(ErrorMessage = "Password is required")]
         public required string Password { get; set; }
     }

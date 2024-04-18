@@ -30,8 +30,8 @@ namespace DocumentTrackingSystem.Web.Services.Document
                     Subject = model.Subject,
                     Description = model.Description,
                     TrackingStatus = [new ETrackingStatus {
-                        Comments = "This is Auto-Generated",
-                        ModifiedBy = "Computer",
+                        Comments = "Initial Creation",
+                        CreatedBy = model.TrackingStatus.Select(e => e.CreatedBy).FirstOrDefault(),
                         StatusId = 1
                     }]
                 });
@@ -47,7 +47,7 @@ namespace DocumentTrackingSystem.Web.Services.Document
 
         public async Task<IEnumerable<ReadDocumentVM>> GetAllDocuments()
         {
-            var raw = await _context.Documents.Include(e => e.Student).Include(e => e.TrackingStatus).ThenInclude(e => e.Status).Include(e => e.Type).AsNoTracking().ToListAsync();
+            var raw = await _context.Documents.Include(e => e.Student).Include(e => e.TrackingStatus.OrderByDescending(e => e.DateCreated)).ThenInclude(e => e.Status).Include(e => e.Type).AsNoTracking().ToListAsync();
 
             var map = raw.Select(e => new ReadDocumentVM
             {
@@ -73,10 +73,9 @@ namespace DocumentTrackingSystem.Web.Services.Document
                 {
                     Id = e.Id,
                     Comments = e.Comments,
-                    ModifiedBy = e.ModifiedBy,
+                    CreatedBy = e.CreatedBy,
                     StatusName = e.Status.StatusName,
-                    DateCreated = e.DateCreated,
-                    DateModified = e.DateModified
+                    DateCreated = e.DateCreated
                 }).ToList()
             });
 
@@ -117,10 +116,9 @@ namespace DocumentTrackingSystem.Web.Services.Document
                 {
                     Id = e.Id,
                     Comments = e.Comments,
-                    ModifiedBy = e.ModifiedBy,
+                    CreatedBy = e.CreatedBy,
                     StatusName = e.Status.StatusName,
-                    DateCreated = e.DateCreated,
-                    DateModified = e.DateModified
+                    DateCreated = e.DateCreated
                 }).ToList()
             };
 

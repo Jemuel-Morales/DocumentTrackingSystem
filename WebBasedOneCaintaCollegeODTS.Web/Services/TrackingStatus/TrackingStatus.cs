@@ -20,7 +20,7 @@ namespace DocumentTrackingSystem.Web.Services.TrackingStatus
                     DocumentId = _routeProtector.Decode(model.DocumentEncryptId),
                     StatusId = model.StatusId,
                     Comments = model.Comments,
-                    ModifiedBy = model.ModifiedBy
+                    CreatedBy = model.CreatedBy
                 });
 
                 await _context.SaveChangesAsync();
