@@ -151,8 +151,6 @@ namespace DocumentTrackingSystem.Web.Services.Document
         }
 
 
-
-
         public async Task<bool> IsValidDocumentId(string encryptedId)
         {
             try
